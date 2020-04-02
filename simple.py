@@ -58,9 +58,31 @@ def createKeypair():
   e = choose_e(phi)
   d = getInverse(e, phi)
 
-  return (N, e), d
+  return (N, e), (N, d)
+
+def encrypt(plaintext, public_key):
+  ciphertext = ''
+  N, e = public_key[0], public_key[1]
+  for char in plaintext:
+    num = ord(char)
+    encrypted_char = (num**e)%N 
+    ciphertext += chr(encrypted_char)
+  return ciphertext
+
+def decrypt(ciphertext, private_key):
+  plaintext = ''
+  N, d = private_key[0], private_key[1]
+  for char in ciphertext:
+    num = ord(char)
+    decrypted_char = (num**d)%N
+    plaintext += chr(decrypted_char)
+  return plaintext
 
 public, private = createKeypair()
 
-print(public)
-print(private)
+message = "Hello!"
+print(message)
+encrypted = encrypt(message, public)
+print(encrypted)
+decrypted = decrypt(encrypted, private)
+print(decrypted)
